@@ -1,0 +1,66 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Meeting {
+  createdAt   DateTime  @default(now())
+  duration    Int?
+  employee    Employee? @relation(fields: [employeeId], references: [id])
+  employeeId  String?
+  id          String    @id @default(cuid())
+  location    String?
+  meetingDate DateTime?
+  updatedAt   DateTime  @updatedAt
+}
+
+model Employee {
+  createdAt  DateTime    @default(now())
+  dateJoined DateTime?
+  dayOffs    DayOff[]
+  email      String?
+  firstName  String?
+  id         String      @id @default(cuid())
+  lastName   String?
+  meetings   Meeting[]
+  sickLeaves SickLeave[]
+  updatedAt  DateTime    @updatedAt
+}
+
+model DayOff {
+  createdAt  DateTime  @default(now())
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+  employeeId String?
+  endDate    DateTime?
+  id         String    @id @default(cuid())
+  reason     String?
+  startDate  DateTime?
+  updatedAt  DateTime  @updatedAt
+}
+
+model SickLeave {
+  createdAt  DateTime  @default(now())
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+  employeeId String?
+  endDate    DateTime?
+  id         String    @id @default(cuid())
+  reason     String?
+  startDate  DateTime?
+  updatedAt  DateTime  @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
